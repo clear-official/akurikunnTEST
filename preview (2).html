@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>あなたの恋愛腹黒度テスト｜アクリくん</title>
+<style>
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+  color:#fff;
+  background:
+    radial-gradient(circle at 18% 8%,rgba(255,41,155,.20),transparent 28%),
+    radial-gradient(circle at 82% 18%,rgba(155,52,255,.16),transparent 25%),
+    linear-gradient(180deg,#090311 0%,#120617 42%,#08030d 100%);
+  min-height:100vh;
+}
+body:before{
+  content:"";position:fixed;inset:0;pointer-events:none;opacity:.12;
+  background-image:
+    linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px);
+  background-size:28px 28px;
+}
+.wrap{max-width:760px;margin:0 auto;padding:18px 14px 64px}
+.hero,.qbox,.result{
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:26px;
+  background:rgba(13,7,20,.92);
+  box-shadow:0 14px 42px rgba(0,0,0,.28);
+}
+.hero{padding:30px 20px 26px;text-align:center;overflow:hidden;position:relative}
+.badge{
+  display:inline-block;padding:7px 13px;border-radius:999px;
+  border:1px solid rgba(255,85,188,.45);
+  color:#ff8fd1;font-size:11px;font-weight:900;letter-spacing:.14em;
+  background:rgba(255,44,168,.06);
+}
+.ria{
+  width:190px;height:190px;margin:18px auto 10px;
+  display:flex;align-items:center;justify-content:center;
+}
+.ria img{max-width:100%;max-height:100%;object-fit:contain;filter:drop-shadow(0 0 18px rgba(255,71,177,.28))}
+h1{
+  margin:6px 0 10px;font-size:clamp(30px,7vw,48px);line-height:1.18;
+  text-shadow:0 0 18px rgba(255,55,175,.32);
+}
+.neon{color:#ff5fbe}
+.hero p{max-width:560px;margin:10px auto 0;color:#ded3e5;font-size:15px;line-height:1.9}
+.note{margin-top:12px;color:#9f90ab;font-size:11px}
+.start-btn,.retry-btn{
+  border:0;cursor:pointer;min-height:54px;padding:0 24px;border-radius:17px;
+  color:#fff;font-size:16px;font-weight:900;margin-top:20px;
+  background:linear-gradient(90deg,#ff2da8,#b13cff);
+  box-shadow:0 0 24px rgba(255,45,168,.25);
+}
+.quiz{display:none;margin-top:20px}
+.progress{height:9px;border-radius:999px;background:#1b1024;overflow:hidden;margin-bottom:12px}
+.progress span{display:block;height:100%;background:linear-gradient(90deg,#ff2da8,#c88cff);transition:.25s}
+.qbox{padding:22px 16px}
+.qnum{color:#ff85cd;font-size:12px;font-weight:900;letter-spacing:.14em;margin-bottom:8px}
+.question{font-size:20px;font-weight:900;line-height:1.55;margin-bottom:16px}
+.answers{display:grid;gap:10px}
+.answer{
+  width:100%;border:1px solid rgba(255,255,255,.10);
+  background:rgba(255,255,255,.025);color:#fff;text-align:left;
+  border-radius:15px;padding:14px 13px;font-size:14px;line-height:1.55;cursor:pointer;
+}
+.answer:hover,.answer.selected{border-color:#ff58bd;background:rgba(255,44,168,.09)}
+.quiz-nav{display:flex;justify-content:flex-start;margin-top:14px}
+.back-btn{
+  border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);color:#d9cfe0;
+  border-radius:13px;min-height:42px;padding:0 15px;font-size:13px;font-weight:800;cursor:pointer;
+}
+.back-btn:disabled{opacity:.3;cursor:not-allowed}
+.akuri-float{
+  display:flex;align-items:center;gap:12px;margin-bottom:16px;padding:11px 12px;
+  border:1px solid rgba(255,255,255,.08);border-radius:17px;
+  background:linear-gradient(135deg,rgba(255,44,168,.07),rgba(176,60,255,.05));
+}
+.akuri-mini{width:78px;height:78px;flex:0 0 auto}
+.akuri-mini img{width:100%;height:100%;object-fit:contain}
+.akuri-txt{font-size:12px;line-height:1.65;color:#d9cfe0;text-align:left}
+.akuri-txt b{display:block;color:#ff8fd1;margin-bottom:3px}
+.result{display:none;margin-top:20px;padding:24px 16px;text-align:center}
+.eyebrow{color:#ff8fd1;font-size:11px;font-weight:900;letter-spacing:.16em}
+.score{font-size:56px;font-weight:1000;margin:8px 0 4px;text-shadow:0 0 20px rgba(255,0,153,.34)}
+.rank{display:inline-block;padding:7px 13px;border-radius:999px;border:1px solid rgba(255,88,189,.45);color:#ff8fd1;font-size:13px;font-weight:900}
+.result h2{font-size:27px;margin:12px 0 10px}
+.result p{text-align:left;color:#ded4e6;line-height:1.9;font-size:14px}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:18px 0}
+.stat{padding:13px 12px;border-radius:14px;background:#140b1b;border:1px solid rgba(255,255,255,.07);text-align:left}
+.stat b{display:block;color:#ab9ab7;font-size:11px;margin-bottom:5px}
+.stat span{font-size:14px;font-weight:900}
+.stat small{display:block;color:#bbaec4;font-size:11px;line-height:1.6;margin-top:7px}
+.ria-line{margin:16px 0;padding:14px;border-radius:15px;border:1px solid rgba(255,88,189,.20);background:rgba(255,44,168,.05);color:#ffd0ec;text-align:left;font-weight:800;line-height:1.7}
+.match{margin-top:16px;padding:15px;border-radius:17px;text-align:left;background:linear-gradient(135deg,rgba(255,44,168,.09),rgba(140,46,255,.06));border:1px solid rgba(255,255,255,.08)}
+
+.match-inner{
+  display:flex;
+  align-items:center;
+  gap:14px;
+}
+.match-fluff{
+  width:82px;
+  height:82px;
+  flex:0 0 auto;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:20px;
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.09);
+  box-shadow:0 0 18px rgba(255,88,189,.10);
+}
+.match-fluff img{
+  width:72px;
+  height:72px;
+  object-fit:contain;
+  display:block;
+}
+.match-copy{min-width:0}
+@media(max-width:520px){
+  .match-fluff{width:72px;height:72px}
+  .match-fluff img{width:64px;height:64px}
+}
+
+.match .label{color:#ff8fd1;font-size:11px;font-weight:900;letter-spacing:.12em}
+.match .type{font-size:18px;font-weight:900;margin:5px 0}
+.match .desc{font-size:12px;color:#d6cadf;line-height:1.7}
+.share-title{margin:20px 0 10px;font-size:14px;font-weight:900}
+.share-buttons{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.share-btn{min-height:47px;border-radius:13px;border:1px solid rgba(255,255,255,.10);color:#fff;font-weight:900;cursor:pointer;background:#17101f;font-size:12px}
+.share-btn.x{background:#0d0d0e}
+.share-btn.line{background:#113a1d}
+.share-btn.native{background:linear-gradient(90deg,#9a31ff,#ff2da8)}
+.copy-note{min-height:1.4em;margin-top:8px;color:#94869f;font-size:11px}
+footer{text-align:center;color:#6e6178;font-size:10px;line-height:1.7;margin-top:24px}
+@media(max-width:520px){
+  .wrap{padding:12px 10px 48px}
+  .hero{padding:24px 14px 22px}
+  .ria{width:165px;height:165px}
+  .question{font-size:18px}
+  .stats{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<section class="hero">
+  <div class="badge">MIDNIGHT CLEAR / AKURI TEST</div>
+  <div class="ria"><img src="https://wp.app-clear.com/wp-content/uploads/2026/09/ChatGPT-Image-2026年9月8日-17_00_23.jpg" alt="アクリくん"></div>
+  <h1>あなたの<br><span class="neon">恋愛腹黒度</span>テスト 😈</h1>
+  <p>
+    好きな人の前では、ちょっとだけ“いい自分”を演じる？<br>
+    駆け引き、探り、計算、かわいい嘘。<br>
+    あなたの恋に隠れた“腹黒さ”をアクリくんがこっそりチェック。
+  </p>
+  <div class="note">※占いではなく、恋愛エンタメとして楽しむテストです。</div>
+  <button class="start-btn" onclick="startQuiz()">テストをはじめる 😈</button>
+</section>
+
+<section class="quiz" id="quiz">
+  <div class="progress"><span id="progressBar"></span></div>
+  <div class="qbox">
+    <div class="akuri-float">
+      <div class="akuri-mini"><img src="https://wp.app-clear.com/wp-content/uploads/2026/09/ChatGPT-Image-2026年9月8日-17_00_23.jpg" alt="アクリくん"></div>
+      <div class="akuri-txt"><b>アクリくんの黒メモ</b>その選択、本当に“無意識”かな……？😎</div>
+    </div>
+    <div class="qnum" id="qnum">QUESTION 01 / 10</div>
+    <div class="question" id="question"></div>
+    <div class="answers" id="answers"></div>
+    <div class="quiz-nav"><button class="back-btn" id="backBtn" onclick="prevQuestion()">← 前の問題へ</button></div>
+  </div>
+</section>
+
+<section class="result" id="result">
+  <div class="akuri-float">
+    <div class="akuri-mini"><img src="https://wp.app-clear.com/wp-content/uploads/2026/09/ChatGPT-Image-2026年9月8日-17_00_23.jpg" alt="アクリくん"></div>
+    <div class="akuri-txt"><b>アクリくんの最終報告</b>あなたの恋愛腹黒度、ぜんぶ見えちゃいました。</div>
+  </div>
+  <div class="eyebrow">SECRET SIDE ANALYSIS</div>
+  <div class="score" id="scoreText">82%</div>
+  <div class="rank" id="rankText">恋の策略家タイプ</div>
+  <h2 id="resultTitle"></h2>
+
+  <div class="stats">
+    <div class="stat"><b>計算力</b><span id="s1"></span><small id="sd1"></small></div>
+    <div class="stat"><b>駆け引き力</b><span id="s2"></span><small id="sd2"></small></div>
+    <div class="stat"><b>観察力</b><span id="s3"></span><small id="sd3"></small></div>
+    <div class="stat"><b>本音隠蔽力</b><span id="s4"></span><small id="sd4"></small></div>
+  </div>
+
+  <p id="resultBody"></p>
+  <div class="ria-line" id="riaLine"></div>
+
+  <div class="match">
+    <div class="match-inner">
+      <div class="match-fluff">
+        <img id="matchFluff" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='52' r='32' fill='%23d9a5ff'/%3E%3Ccircle cx='30' cy='48' r='18' fill='%23d9a5ff'/%3E%3Ccircle cx='70' cy='48' r='18' fill='%23d9a5ff'/%3E%3Ccircle cx='42' cy='51' r='3' fill='%23251b31'/%3E%3Ccircle cx='58' cy='51' r='3' fill='%23251b31'/%3E%3C/svg%3E" alt="小さな毛玉ちゃん">
+      </div>
+      <div class="match-copy">
+        <div class="label">相性のいいタイプ</div>
+        <div class="type" id="matchType"></div>
+        <div class="desc" id="matchDesc"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="share-title">結果をシェアする</div>
+  <div class="share-buttons">
+    <button class="share-btn x" onclick="shareX()">𝕏 で共有</button>
+    <button class="share-btn line" onclick="shareLine()">LINE</button>
+    <button class="share-btn native" onclick="nativeShare()">共有する</button>
+  </div>
+  <div class="copy-note" id="copyNote"></div>
+
+  <button class="retry-btn" onclick="retryQuiz()">もう一度テストする ↻</button>
+</section>
+
+<footer>
+運営企画「アクリくんの恋愛テスト」<br>
+本テストは娯楽を目的としたコンテンツです。
+</footer>
+
+</div>
+
+<script>
+const questions = [
+  {
+    q:"気になる相手から返信が来ない。あなたが一番近いのは？",
+    a:[
+      ["何もせず、普通に待つ",0],
+      ["少し時間を空けて別の話題を送る",1],
+      ["SNSの更新やオンライン状況を見る",2],
+      ["あえて楽しそうな投稿をして反応を見る",3]
+    ]
+  },
+  {
+    q:"好きな人の前では、少し“盛った自分”を見せることがある？",
+    a:[
+      ["ほぼない。素のまま",0],
+      ["多少よく見せるくらいはある",1],
+      ["相手の好みに合わせることがある",2],
+      ["相手ごとに見せ方をかなり変える",3]
+    ]
+  },
+  {
+    q:"相手の気持ちを確かめたいとき、どうする？",
+    a:[
+      ["素直に聞く",0],
+      ["さりげなく会話で確認する",1],
+      ["共通の知人やSNSから情報を集める",2],
+      ["別の異性の話を出して反応を見る",3]
+    ]
+  },
+  {
+    q:"デートの予定を決めるとき、本当は空いていても？",
+    a:[
+      ["空いてると普通に伝える",0],
+      ["少しだけ予定を確認するふりをする",1],
+      ["暇だと思われないよう即答しない",2],
+      ["一度断って相手の本気度を見ることがある",3]
+    ]
+  },
+  {
+    q:"恋のライバルっぽい人が現れたら？",
+    a:[
+      ["気にせず自分らしくいる",0],
+      ["少しだけ意識する",1],
+      ["相手より自分の良さが伝わるよう動く",2],
+      ["相手の弱点や状況まで把握したくなる",3]
+    ]
+  },
+  {
+    q:"好きな人に嫉妬してほしいと思うことは？",
+    a:[
+      ["ほぼない",0],
+      ["少しならある",1],
+      ["たまに他の異性の話を出したくなる",2],
+      ["反応を見るためにわざと匂わせることがある",3]
+    ]
+  },
+  {
+    q:"本当は寂しいのに、相手にはどう見せる？",
+    a:[
+      ["普通に寂しいと言う",0],
+      ["少し我慢してから伝える",1],
+      ["平気そうに振る舞う",2],
+      ["むしろ楽しそうにして相手から来るのを待つ",3]
+    ]
+  },
+  {
+    q:"友だちに恋愛相談するとき、どこまで話す？",
+    a:[
+      ["自分の気持ちも失敗も全部話す",0],
+      ["大体は正直に話す",1],
+      ["自分に不利な部分は少し省く",2],
+      ["味方になってもらえるよう話し方を変えることがある",3]
+    ]
+  },
+  {
+    q:"恋愛で“かわいい嘘”をついたことは？",
+    a:[
+      ["ほぼない",0],
+      ["小さなことならある",1],
+      ["相手を困らせないためなら使う",2],
+      ["恋を進めるためなら多少はアリだと思う",3]
+    ]
+  },
+  {
+    q:"恋愛で一番大切なのはどれに近い？",
+    a:[
+      ["素直さ",0],
+      ["思いやり",1],
+      ["タイミング",2],
+      ["相手の気持ちを読んで動くこと",3]
+    ]
+  }
+];
+
+let current=0;
+let answersState=Array(questions.length).fill(null);
+let currentResultData=null;
+
+function startQuiz(){
+  document.querySelector(".start-btn").style.display="none";
+  document.getElementById("quiz").style.display="block";
+  renderQuestion();
+  setTimeout(()=>document.getElementById("quiz").scrollIntoView({behavior:"smooth",block:"start"}),80);
+}
+
+function renderQuestion(){
+  document.getElementById("qnum").textContent=`QUESTION ${String(current+1).padStart(2,"0")} / 10`;
+  document.getElementById("question").textContent=questions[current].q;
+  document.getElementById("progressBar").style.width=`${((current+1)/questions.length)*100}%`;
+  document.getElementById("backBtn").disabled=current===0;
+
+  const box=document.getElementById("answers");
+  box.innerHTML="";
+  questions[current].a.forEach((item)=>{
+    const b=document.createElement("button");
+    b.className="answer";
+    if(answersState[current]===item[1]) b.classList.add("selected");
+    b.textContent=item[0];
+    b.onclick=()=>{
+      answersState[current]=item[1];
+      document.querySelectorAll(".answer").forEach(x=>x.classList.remove("selected"));
+      b.classList.add("selected");
+      setTimeout(()=>{
+        if(current<questions.length-1){
+          current++;
+          renderQuestion();
+        }else{
+          showResult();
+        }
+      },180);
+    };
+    box.appendChild(b);
+  });
+}
+
+function prevQuestion(){
+  if(current===0)return;
+  current--;
+  renderQuestion();
+}
+
+function showResult(){
+  document.getElementById("quiz").style.display="none";
+  const total=answersState.reduce((s,v)=>s+(v??0),0);
+  const pct=Math.round((total/(questions.length*3))*100);
+
+  let d;
+  if(pct<=25){
+    d={
+      rank:"ピュア恋愛型",
+      title:"恋ではかなり素直。裏工作ほぼゼロ。",
+      body:"好きな人にはできるだけ素直でいたいタイプ。駆け引きや計算より、相手とのやり取りそのものを大切にします。恋愛腹黒度はかなり低めですが、正直すぎて自分の気持ちがバレやすいことも。",
+      ria:"アクリくん「もう少しくらい計算しても、恋は怒らないよ？😎」",
+      s:["★☆☆☆☆","★☆☆☆☆","★★☆☆☆","★☆☆☆☆"],
+      sd:[
+        "相手を動かすために計算することは少なく、思ったまま行動するタイプ。",
+        "押したり引いたりより、自然な流れを大切にします。",
+        "相手の変化には気づくものの、裏を読みすぎません。",
+        "気持ちが顔や文章に出やすく、隠し事はちょっと苦手。"
+      ],
+      matchType:"ちょい策士のリード型",
+      matchDesc:"あなたの素直さを受け止めつつ、少し先回りして恋を進めてくれる相手と好相性。",fluff:"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='52' r='32' fill='%23d9a5ff'/%3E%3Ccircle cx='30' cy='48' r='18' fill='%23d9a5ff'/%3E%3Ccircle cx='70' cy='48' r='18' fill='%23d9a5ff'/%3E%3Ccircle cx='42' cy='51' r='3' fill='%23251b31'/%3E%3Ccircle cx='58' cy='51' r='3' fill='%23251b31'/%3E%3C/svg%3E"
+    };
+  }else if(pct<=50){
+    d={
+      rank:"隠れ小悪魔型",
+      title:"基本は素直。でも、ちょっとだけ計算してます。",
+      body:"普段は自然体だけど、好きな人の前では少しだけ見せ方を考えるタイプ。返信のタイミングをずらしたり、ちょっとだけ余裕を演出したり。本人は計算だと思っていなくても、実は恋愛センス高めです。",
+      ria:"アクリくん「“たまたま返信遅れた”……本当に？😎」",
+      s:["★★★☆☆","★★☆☆☆","★★★☆☆","★★☆☆☆"],
+      sd:[
+        "相手の反応を見ながら、少しだけ動き方を調整できます。",
+        "強い駆け引きはしないけど、タイミングは意外と考えています。",
+        "相手の機嫌や温度差には比較的気づきやすいです。",
+        "本音を全部は出さず、少しだけ余白を残すのが得意。"
+      ],
+      matchType:"素直な安心型",
+      matchDesc:"あなたの小さな駆け引きを深読みしすぎず、言葉で安心をくれるタイプが好相性。",fluff:"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='52' r='32' fill='%23d9a5ff'/%3E%3Ccircle cx='30' cy='48' r='18' fill='%23d9a5ff'/%3E%3Ccircle cx='70' cy='48' r='18' fill='%23d9a5ff'/%3E%3Ccircle cx='42' cy='51' r='3' fill='%23251b31'/%3E%3Ccircle cx='58' cy='51' r='3' fill='%23251b31'/%3E%3C/svg%3E"
+    };
+  }else if(pct<=75){
+    d={
+      rank:"恋の駆け引き上手型",
+      title:"恋では“見せ方”をかなり分かっています。",
+      body:"相手の反応を見ながら、自分の見せ方や距離感を上手に調整できるタイプ。追いすぎない、引きすぎない、その微妙なラインを感覚的に使えます。ただし、考えすぎると自分の本音が分からなくなることも。",
+      ria:"アクリくん「それ、偶然じゃなくてちゃんと作戦でしょ？😎」",
+      s:["★★★★☆","★★★★☆","★★★★☆","★★★☆☆"],
+      sd:[
+        "恋を有利に進めるために、相手の反応を見ながら動けます。",
+        "押す・引く・待つの使い分けが上手。恋の間合いを読めるタイプ。",
+        "言葉や返信の変化から、相手の気分をかなり察知できます。",
+        "本音は見せすぎず、必要なところだけ出すバランス型。"
+      ],
+      matchType:"まっすぐ一途型",
+      matchDesc:"駆け引きをしなくても気持ちを示してくれる相手だと、あなたも安心して素直になれます。",fluff:"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='52' r='32' fill='%23d9a5ff'/%3E%3Ccircle cx='30' cy='48' r='18' fill='%23d9a5ff'/%3E%3Ccircle cx='70' cy='48' r='18' fill='%23d9a5ff'/%3E%3Ccircle cx='42' cy='51' r='3' fill='%23251b31'/%3E%3Ccircle cx='58' cy='51' r='3' fill='%23251b31'/%3E%3C/svg%3E"
+    };
+  }else{
+    d={
+      rank:"恋の策略家タイプ",
+      title:"かなり計算できる恋愛プレイヤーです。",
+      body:"あなたは恋を進めるためなら、タイミング・見せ方・相手の反応までかなり考えられるタイプ。相手の気持ちを読み、最適な一手を選ぶのが得意です。ただし、計算しすぎると恋そのものより“勝ち負け”を意識してしまうことも。",
+      ria:"アクリくん「その恋、もう3手先まで読んでない？😎」",
+      s:["★★★★★","★★★★★","★★★★★","★★★★★"],
+      sd:[
+        "恋を進めるための作戦を考えるのが得意。相手の反応まで予測しがち。",
+        "押す・引く・匂わせるなど、恋の駆け引きを自然に使えます。",
+        "相手の言葉・態度・タイミングから本音を読む力がかなり高め。",
+        "本当の気持ちを簡単には見せず、状況に合わせて見せ方を変えられます。"
+      ],
+      matchType:"おおらか直球型",
+      matchDesc:"あなたの複雑な作戦を全部受け止めつつ、真正面から気持ちを伝えてくれる相手が好相性。",fluff:"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='52' r='32' fill='%23d9a5ff'/%3E%3Ccircle cx='30' cy='48' r='18' fill='%23d9a5ff'/%3E%3Ccircle cx='70' cy='48' r='18' fill='%23d9a5ff'/%3E%3Ccircle cx='42' cy='51' r='3' fill='%23251b31'/%3E%3Ccircle cx='58' cy='51' r='3' fill='%23251b31'/%3E%3C/svg%3E"
+    };
+  }
+
+  currentResultData={pct,...d};
+  document.getElementById("scoreText").textContent=pct+"%";
+  document.getElementById("rankText").textContent=d.rank;
+  document.getElementById("resultTitle").textContent=d.title;
+  document.getElementById("resultBody").textContent=d.body;
+  document.getElementById("riaLine").textContent=d.ria;
+  document.getElementById("matchType").textContent=d.matchType;
+  document.getElementById("matchDesc").textContent=d.matchDesc;
+  document.getElementById("matchFluff").src=d.fluff;
+  ["s1","s2","s3","s4"].forEach((id,i)=>document.getElementById(id).textContent=d.s[i]);
+  ["sd1","sd2","sd3","sd4"].forEach((id,i)=>document.getElementById(id).textContent=d.sd[i]);
+  document.getElementById("result").style.display="block";
+  setTimeout(()=>document.getElementById("result").scrollIntoView({behavior:"smooth",block:"start"}),80);
+}
+
+function buildShareText(){
+  const d=currentResultData;
+  return `😈 あなたの恋愛腹黒度テスト\n\n私の腹黒度は【${d.pct}%】\nタイプ：${d.rank}\n相性がいいのは「${d.matchType}」でした😎\n\n#アクリくん #恋愛テスト`;
+}
+function pageUrl(){return window.location.href}
+function shareX(){
+  window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(buildShareText())}&url=${encodeURIComponent(pageUrl())}`,"_blank","noopener,noreferrer");
+}
+function shareLine(){
+  window.open(`https://line.me/R/msg/text/?${encodeURIComponent(buildShareText()+"\n"+pageUrl())}`,"_blank","noopener,noreferrer");
+}
+async function nativeShare(){
+  if(navigator.share){
+    try{await navigator.share({title:"あなたの恋愛腹黒度テスト",text:buildShareText(),url:pageUrl()});return;}
+    catch(e){if(e&&e.name==="AbortError")return;}
+  }
+  try{
+    await navigator.clipboard.writeText(buildShareText()+"\n"+pageUrl());
+    document.getElementById("copyNote").textContent="共有文をコピーしました！";
+  }catch(e){
+    document.getElementById("copyNote").textContent="このブラウザでは共有機能を利用できませんでした。";
+  }
+}
+function retryQuiz(){
+  current=0;
+  answersState=Array(questions.length).fill(null);
+  currentResultData=null;
+  document.getElementById("result").style.display="none";
+  document.getElementById("quiz").style.display="block";
+  renderQuestion();
+  document.getElementById("quiz").scrollIntoView({behavior:"smooth",block:"start"});
+}
+</script>
+</body>
+</html>
